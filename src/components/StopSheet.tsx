@@ -26,12 +26,13 @@ interface Props {
   stop: Stop;
   onGo: (id: number) => void;
   onPerson: (slug: string) => void;
+  theme: 'light' | 'dark';
 }
 
 /** Розмір цифри факту залежить від довжини: короткі значення стають «експонатами». */
 const factSize = (f: Fact) => (f.value.length <= 6 ? 'xl' : f.value.length <= 14 ? 'lg' : 'md');
 
-export default function StopSheet({ stop, onGo, onPerson }: Props) {
+export default function StopSheet({ stop, onGo, onPerson, theme }: Props) {
   const idx = SEQUENCE.indexOf(stop.id);
   const prev = idx > 0 ? getStop(SEQUENCE[idx - 1]) : undefined;
   const next = idx < SEQUENCE.length - 1 ? getStop(SEQUENCE[idx + 1]) : undefined;
@@ -100,7 +101,7 @@ export default function StopSheet({ stop, onGo, onPerson }: Props) {
 
           <div className="rail__map">
             <a className="rail__mapcard" href={`#map-${stop.id}`} aria-label="Відкрити на великій мапі">
-              <MiniMap stop={stop} />
+              <MiniMap stop={stop} theme={theme} />
             </a>
             <a className="rail__maplink" href={`#map-${stop.id}`}>
               Відкрити на великій мапі →

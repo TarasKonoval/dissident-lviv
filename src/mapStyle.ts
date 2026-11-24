@@ -23,19 +23,19 @@ type Palette = {
 };
 
 const LIGHT: Palette = {
-  bg: '#e8eaee',
-  land: '#e4e7eb',
-  park: '#dde3df',
-  water: '#c9d2da',
-  building: '#dadde3',
-  buildingLine: '#cdd1d8',
-  road: '#f5f6f8',
-  roadMajor: '#fbfbfc',
-  casing: '#cfd3da',
-  rail: '#cfd2d8',
-  label: '#5d5f6c',
-  labelMinor: '#80838f',
-  halo: '#eceef1',
+  bg: '#ebe3d2',
+  land: '#ebe3d2',
+  park: '#d9d9bf',
+  water: '#c9cfc9',
+  building: '#ddd3bf',
+  buildingLine: '#d2c6ae',
+  road: '#f8f4ea',
+  roadMajor: '#fdfaf3',
+  casing: '#d3c7b0',
+  rail: '#d3c8b3',
+  label: '#5e5548',
+  labelMinor: '#857a69',
+  halo: '#efe8da',
 };
 
 const DARK: Palette = {

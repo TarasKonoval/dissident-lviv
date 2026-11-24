@@ -7,7 +7,7 @@ import { addRoute } from './MapView';
 import type { Stop } from '../types';
 
 /** Невелика нерухома мапа в бічній колонці аркуша: точка, сусіди й маршрут. */
-export default function MiniMap({ stop }: { stop: Stop }) {
+export default function MiniMap({ stop, theme }: { stop: Stop; theme: 'light' | 'dark' }) {
   const box = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function MiniMap({ stop }: { stop: Stop }) {
       attributionControl: false,
     });
     map.on('load', () => {
-      restyle(map, 'dark');
+      restyle(map, theme);
       addRoute(map);
     });
     SEQUENCE.forEach((id) => {
@@ -33,7 +33,7 @@ export default function MiniMap({ stop }: { stop: Stop }) {
       new maplibregl.Marker({ element: el }).setLngLat([s.lng, s.lat]).addTo(map);
     });
     return () => map.remove();
-  }, [stop]);
+  }, [stop, theme]);
 
   return <div ref={box} className="minimap" />;
 }

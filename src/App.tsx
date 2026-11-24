@@ -26,6 +26,25 @@ export default function App() {
   const [filter, setFilter] = useState<ThemeKey | null>(null);
   /** «Більша мапа»: хронологію сховано, мапа на весь екран під шапкою */
   const [bigMap, setBigMap] = useState(false);
+  /** Тему виставляє index.html до першого кадру; тут — лише перемикач */
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+  );
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.querySelector<HTMLMetaElement>('meta[name=theme-color]')?.setAttribute('content', theme === 'light' ? '#f3eee3' : '#0e0d13');
+  }, [theme]);
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    // одразу, щоб мапа (її ефект іде раніше за ефект App) прочитала нові кольори
+    document.documentElement.dataset.theme = next;
+    setTheme(next);
+    try {
+      localStorage.setItem('dl-theme', next);
+    } catch {
+      /* приватний режим */
+    }
+  };
   const reducedMotion = useMedia('(prefers-reduced-motion: reduce)');
   const narrow = useMedia('(max-width: 899px)');
   const firstRender = useRef(true);
@@ -151,6 +170,14 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <button
+          type="button"
+          className="tool tool--theme"
+          onClick={toggleTheme}
+          aria-label={theme === 'light' ? 'Увімкнути темну тему' : 'Увімкнути світлу тему'}
+        >
+          {theme === 'light' ? 'Темна' : 'Світла'}
+        </button>
         <button type="button" className="tool tool--fs" onClick={toggleFullscreen} title="Повний екран (F)">
           Повний екран
         </button>
@@ -164,7 +191,7 @@ export default function App() {
             filter={filter}
             onFilter={setFilter}
             onSelect={focusOnMap}
-            mode="dark"
+            mode={theme}
             reducedMotion={reducedMotion}
             visible={onMap}
           />
@@ -210,7 +237,7 @@ export default function App() {
             </div>
           )}
           {view.kind === 'about' && <Intro onOpen={openStop} onWalk={() => go({ kind: 'walk' })} />}
-          {stop && <StopSheet stop={stop} onGo={openStop} onPerson={openPerson} />}
+          {stop && <StopSheet stop={stop} onGo={openStop} onPerson={openPerson} theme={theme} />}
           {person && <PersonPage person={person} onOpen={openStop} onClose={closePerson} />}
           {view.kind === 'walk' && <WalkMode onOpen={openStop} />}
           {view.kind === 'people' && <PeopleGrid onOpen={openStop} onPerson={openPerson} />}

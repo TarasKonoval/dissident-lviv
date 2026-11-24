@@ -3,9 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Інтерактивна мапа і маршрут прогулянки: десять адрес дисидентського Львова, 1965–1991." />
-    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Інтерактивна мапа і маршрут прогулянки: п'ятнадцять адрес дисидентського Львова, 1965–1991." />
+    <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#0e0d13" />
+    <script>
+      // Тема до першого кадру: вибір відвідувача або налаштування пристрою
+      (function () {
+        var t;
+        try { t = localStorage.getItem('dl-theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+        document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#f3eee3' : '#0e0d13';
+      })();
+    </script>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23eef0f3'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' text-anchor='middle' fill='%234a3b8c'%3EД%3C/text%3E%3C/svg%3E" />
     <title>Дисидентський Львів</title>
   </head>
