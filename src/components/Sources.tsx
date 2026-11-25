@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { additions, creditName, data, getStop, headline, outlet, pad2, personSlug, portraitOf } from '../data';
+import { creditName, data, getStop, headline, outlet, pad2, personSlug, portraitOf } from '../data';
 import type { Link } from '../types';
 
 interface Props {
@@ -26,7 +26,6 @@ function collect() {
   for (const s of data.stops) {
     s.sources.forEach((l) => add(l, s.id));
     if (s.quote) add(s.quote.source, s.id);
-    additions(s.id).forEach((a) => add(a.source, s.id));
   }
   for (const p of data.people) p.sources.forEach((l) => add(l, undefined, p.name));
 
@@ -45,7 +44,7 @@ export default function Sources({ stop, onOpen, onPerson, onAll }: Props) {
   const total = groups.reduce((n, g) => n + g.entries.length, 0);
   const focus = stop != null ? getStop(stop) : undefined;
   const focusLinks = focus
-    ? [...focus.sources, ...(focus.quote ? [focus.quote.source] : []), ...additions(focus.id).map((a) => a.source)].filter(
+    ? [...focus.sources, ...(focus.quote ? [focus.quote.source] : [])].filter(
         (l, i, arr) => arr.findIndex((x) => x.url === l.url) === i,
       )
     : [];

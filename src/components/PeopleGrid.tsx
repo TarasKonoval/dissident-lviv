@@ -1,6 +1,6 @@
 import Face from './Face';
 import Prose from './Prose';
-import { creditName, data, getStop, pad2, personSlug, portraitOf } from '../data';
+import { creditName, data, getStop, initials, pad2, personSlug, portraitOf } from '../data';
 import type { Person } from '../types';
 
 function StopBadges({ person, onOpen }: { person: Person; onOpen: (id: number) => void }) {
@@ -22,6 +22,15 @@ function StopBadges({ person, onOpen }: { person: Person; onOpen: (id: number) =
   );
 }
 
+/** Людина без вільного портрета: ініціали контуром, як номер аркуша, без порожньої рамки. */
+function Monogram({ name, size }: { name: string; size: 'md' | 'lg' }) {
+  return (
+    <span className={`mono mono--${size}`} aria-hidden="true">
+      {initials(name)}
+    </span>
+  );
+}
+
 interface GridProps {
   onOpen: (id: number) => void;
   onPerson: (slug: string) => void;
@@ -38,9 +47,9 @@ export default function PeopleGrid({ onOpen, onPerson }: GridProps) {
       </header>
       <ol className="people__list">
         {data.people.map((p) => (
-          <li key={p.name} className="person">
+          <li key={p.name} className={`person${portraitOf(p.name) ? '' : ' person--text'}`}>
             <button type="button" className="person__card" onClick={() => onPerson(personSlug(p))}>
-              <Face name={p.name} size="md" />
+              {portraitOf(p.name) ? <Face name={p.name} size="md" /> : <Monogram name={p.name} size="md" />}
               <span className="person__head">
                 <span className="person__name">{p.name}</span>
                 <span className="person__years">{p.years ?? 'роки життя невідомі'}</span>
@@ -48,6 +57,9 @@ export default function PeopleGrid({ onOpen, onPerson }: GridProps) {
             </button>
             <p className="person__role">{p.role}</p>
             <p className="person__text">{p.summary}</p>
+            <button type="button" className="linkbtn person__more" onClick={() => onPerson(personSlug(p))}>
+              Читати біографію →
+            </button>
             <StopBadges person={p} onOpen={onOpen} />
           </li>
         ))}
@@ -67,8 +79,8 @@ export function PersonPage({ person, onOpen, onClose }: PageProps) {
   const portrait = portraitOf(person.name);
   return (
     <article className="personpage" aria-labelledby="person-title">
-      <header className="personpage__hero">
-        <Face name={person.name} size="lg" />
+      <header className={`personpage__hero${portrait ? '' : ' personpage__hero--text'}`}>
+        {portrait ? <Face name={person.name} size="lg" /> : <Monogram name={person.name} size="lg" />}
         <div className="personpage__head">
           <p className="hero__kicker">
             <span>
@@ -114,14 +126,17 @@ export function PersonPage({ person, onOpen, onClose }: PageProps) {
           <p className="sheet__lead">{person.summary}</p>
           <Prose paragraphs={person.bio} glossary className="story story--bio" />
         </div>
-        <aside className="sheet__rail">
-          <section>
+        <aside className="sheet__rail personpage__rail" aria-label="Коротко">
+          <div className="idcard">
+            <p className="idcard__name">{person.name}</p>
+            <p className="idcard__years">{person.years ?? 'роки життя невідомі'}</p>
+            <p className="idcard__role">{person.role}</p>
             <h3 className="label">На мапі</h3>
             <StopBadges person={person} onOpen={onOpen} />
-          </section>
-          <a className="rail__sources" href="#sources">
-            Джерела · {person.sources.length} →
-          </a>
+            <a className="rail__sources" href="#sources">
+              Джерела · {person.sources.length} →
+            </a>
+          </div>
         </aside>
       </div>
     </article>

@@ -7,7 +7,18 @@ interface Props {
   onWalk: () => void;
 }
 
-const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+const COUNT = ['', 'Одна хвиля', 'Дві хвилі', 'Три хвилі', 'Чотири хвилі', "П'ять хвиль", 'Шість хвиль', 'Сім хвиль'];
+
+/** Розділи довгого читання: id секції → підпис у рядку змісту */
+const PARTS: [string, string][] = [
+  ['ctx-intro', 'Передісторія'],
+  ['waves-title', 'Хвилі'],
+  ['system-title', 'Як працювала система'],
+  ['ethics-title', 'Етика'],
+  ['toc-title', 'Аркуші'],
+  ['glossary', 'Словник'],
+];
 
 function Toc({ stops, onOpen }: { stops: Stop[]; onOpen: (id: number) => void }) {
   return (
@@ -30,6 +41,8 @@ const cover = getStop(3)?.photo;
 
 export default function Intro({ onOpen, onWalk }: Props) {
   const { context } = data;
+  // без зміни хешу: інакше роутер поверне вступ на початок
+  const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
     <div className="intro">
@@ -61,7 +74,15 @@ export default function Intro({ onOpen, onWalk }: Props) {
         </p>
       )}
 
-      <section aria-label="Вступ">
+      <nav className="parts" aria-label="Розділи вступу">
+        {PARTS.map(([id, label]) => (
+          <button key={id} type="button" className="parts__link" onClick={() => jump(id)}>
+            {label}
+          </button>
+        ))}
+      </nav>
+
+      <section id="ctx-intro" aria-label="Передісторія" className="intro__read">
         <Prose paragraphs={context.intro} className="story story--intro" glossary />
         <p className="intro__start">
           <button type="button" className="btn" onClick={() => onOpen(ROUTE[0].id)}>
@@ -77,31 +98,34 @@ export default function Intro({ onOpen, onWalk }: Props) {
       </section>
 
       <section aria-labelledby="waves-title">
-        <h2 id="waves-title" className="label">
-          Чотири хвилі
+        <h2 id="waves-title" className="intro__h">
+          {COUNT[context.waves.length] ?? `Хвилі: ${context.waves.length}`}
         </h2>
         <ol className="waves">
           {context.waves.map((w, i) => (
             <li key={w.years} className="wave">
               <p className="wave__no">
-                <span className="wave__roman">{ROMAN[i]}</span> {w.years}
+                <span className="wave__roman">{ROMAN[i]}</span>
+                <span className="wave__years">{w.years}</span>
               </p>
-              <h3 className="wave__title">{w.title}</h3>
-              <p>{w.text}</p>
+              <div className="wave__body">
+                <h3 className="wave__title">{w.title}</h3>
+                <p>{w.text}</p>
+              </div>
             </li>
           ))}
         </ol>
       </section>
 
       <section aria-labelledby="system-title" className="system">
-        <h2 id="system-title" className="label">
+        <h2 id="system-title" className="intro__h">
           Як працювала система
         </h2>
         <Prose paragraphs={context.system} className="story" />
       </section>
 
       <section aria-labelledby="ethics-title" className="ethics">
-        <h2 id="ethics-title" className="label">
+        <h2 id="ethics-title" className="intro__h">
           Етика
         </h2>
         <p className="ethics__text">{context.ethics}</p>
@@ -113,8 +137,8 @@ export default function Intro({ onOpen, onWalk }: Props) {
       </aside>
 
       <section aria-labelledby="toc-title" className="toc">
-        <h2 id="toc-title" className="label">
-          Зміст
+        <h2 id="toc-title" className="intro__h">
+          Аркуші
         </h2>
         <p className="toc__group">Піший маршрут</p>
         <Toc stops={ROUTE} onOpen={onOpen} />

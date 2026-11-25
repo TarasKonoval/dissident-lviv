@@ -9,7 +9,6 @@ import {
   formatMinutes,
   leg,
   SEQUENCE,
-  additions,
   creditName,
   data,
   formatCoords,
@@ -36,7 +35,6 @@ export default function StopSheet({ stop, onGo, onPerson, theme }: Props) {
   const idx = SEQUENCE.indexOf(stop.id);
   const prev = idx > 0 ? getStop(SEQUENCE[idx - 1]) : undefined;
   const next = idx < SEQUENCE.length - 1 ? getStop(SEQUENCE[idx + 1]) : undefined;
-  const extra = additions(stop.id);
   const photo = stop.photo?.src ? stop.photo : null;
   const ri = ROUTE.findIndex((r) => r.id === stop.id);
   const nextOnFoot = ri >= 0 && ri < ROUTE.length - 1 ? { s: ROUTE[ri + 1], ...leg(ROUTE[ri + 1].fromPrev) } : null;
@@ -63,20 +61,6 @@ export default function StopSheet({ stop, onGo, onPerson, theme }: Props) {
                 </a>
               </figcaption>
             </figure>
-          )}
-
-          {extra.length > 0 && (
-            <section className="addenda" aria-label="Доповнення з джерел">
-              <p className="label">Ще з джерел</p>
-              {extra.map((a) => (
-                <p key={a.text}>
-                  {a.text}{' '}
-                  <a className="addenda__src" href={a.source.url} target="_blank" rel="noreferrer">
-                    {a.source.title} ↗
-                  </a>
-                </p>
-              ))}
-            </section>
           )}
 
           {stop.unsure && (

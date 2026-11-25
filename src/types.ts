@@ -127,12 +127,6 @@ export interface Portrait {
   src: string;
 }
 
-/** Доповнення з досліджень (src/data/research.json), окремо від основного тексту */
-export interface Addition {
-  text: string;
-  source: Link;
-}
-
 export type View =
   | { kind: 'about'; anchor?: 'glossary' }
   | { kind: 'stop'; id: number }

@@ -46,6 +46,21 @@ export default function App() {
     }
   };
   const reducedMotion = useMedia('(prefers-reduced-motion: reduce)');
+  /** Вкладки на вузькому екрані гортаються вбік; згасання показує, з якого боку є ще */
+  const tabsRef = useRef<HTMLElement>(null);
+  const [tabsFade, setTabsFade] = useState('');
+  const measureTabs = useCallback(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    const start = el.scrollLeft > 2;
+    const end = el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+    setTabsFade(start && end ? 'both' : start ? 'start' : end ? 'end' : '');
+  }, []);
+  useEffect(() => {
+    measureTabs();
+    window.addEventListener('resize', measureTabs);
+    return () => window.removeEventListener('resize', measureTabs);
+  }, [measureTabs]);
   const narrow = useMedia('(max-width: 899px)');
   const firstRender = useRef(true);
   /** Звідки відкрили сторінку людини — туди повертає Esc */
@@ -85,6 +100,7 @@ export default function App() {
       firstRender.current = false;
       return;
     }
+    tabsRef.current?.querySelector('[aria-current=page]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     if (firstRender.current) {
       firstRender.current = false;
       return;
@@ -157,7 +173,7 @@ export default function App() {
             Дисидентський Львів
           </a>
         </h1>
-        <nav className="tabs" aria-label="Розділи">
+        <nav className="tabs" aria-label="Розділи" ref={tabsRef} onScroll={measureTabs} data-fade={tabsFade || undefined}>
           {tabs.map((t) => (
             <button
               key={t.label}

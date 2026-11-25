@@ -1,7 +1,6 @@
-import raw from './data/lviv.json';
-import researchRaw from './data/research.json';
+import raw from './data/lviv.v3.json';
 import portraitsRaw from './data/portraits.json';
-import type { Addition, Dataset, Link, Person, Portrait, RouteStop, Stop, View } from './types';
+import type { Dataset, Link, Person, Portrait, RouteStop, Stop, View } from './types';
 
 export const data = raw as unknown as Dataset;
 
@@ -12,9 +11,6 @@ export const VERTEP_SLUG = 'vertep';
 
 /** Порядок аркушів для презентації: маршрут 1–12, потім окремі місця 13–15. */
 export const SEQUENCE: number[] = [...ROUTE, ...OFF_ROUTE].map((s) => s.id);
-
-const research = (researchRaw as unknown as { stops: Record<string, Addition[]> }).stops;
-export const additions = (id: number): Addition[] => research[String(id)] ?? [];
 
 const portraits = portraitsRaw as unknown as Record<string, Portrait>;
 export const portraitOf = (name: string): Portrait | undefined => portraits[name];
@@ -212,6 +208,9 @@ const GLOSSARY_PATTERNS: Record<string, string> = {
   'Товариство рідної мови': `Товариств${L} рідної мови`,
   'ШІЗО і ПКТ': 'ШІЗО|ПКТ',
   'ДКНС (ГКЧП)': 'ДКНС',
+  УРСС: `Українськ${L} робітничо-селянськ${L} спілк${L}|УРСС`,
+  'Товариство Лева': `Товариств${L} Лева`,
+  'Перм-36': 'Перм-36',
 };
 
 export const glossaryMatchers = data.glossary
