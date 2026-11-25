@@ -185,5 +185,71 @@
     "licenseUrl": null,
     "page": null,
     "src": "portraits/rostyslav-bratun.jpg"
+  },
+  "Левко Лук'яненко": {
+    "file": null,
+    "local": "portraits/levko-lukianenko.jpg",
+    "alt": "Левко Лук'яненко",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/levko-lukianenko.jpg"
+  },
+  "Атена Пашко": {
+    "file": null,
+    "local": "portraits/atena-pashko.jpg",
+    "alt": "Атена Пашко",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/atena-pashko.jpg"
+  },
+  "Михайло Косів": {
+    "file": null,
+    "local": "portraits/mykhailo-kosiv.jpg",
+    "alt": "Михайло Косів",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/mykhailo-kosiv.jpg"
+  },
+  "Ярослав Кендзьор": {
+    "file": null,
+    "local": "portraits/yaroslav-kendzior.jpg",
+    "alt": "Ярослав Кендзьор",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/yaroslav-kendzior.jpg"
+  },
+  "Ірина Сеник": {
+    "file": null,
+    "local": "portraits/iryna-senyk.jpg",
+    "alt": "Ірина Сеник",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/iryna-senyk.jpg"
+  },
+  "Ярослав Дашкевич": {
+    "file": null,
+    "local": "portraits/yaroslav-dashkevych.jpg",
+    "alt": "Ярослав Дашкевич",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/yaroslav-dashkevych.jpg"
   }
 }

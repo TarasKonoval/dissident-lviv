@@ -57,6 +57,24 @@
     },
     "Ростислав Братунь": {
       "local": "portraits/rostyslav-bratun.jpg"
+    },
+    "Левко Лук'яненко": {
+      "local": "portraits/levko-lukianenko.jpg"
+    },
+    "Атена Пашко": {
+      "local": "portraits/atena-pashko.jpg"
+    },
+    "Михайло Косів": {
+      "local": "portraits/mykhailo-kosiv.jpg"
+    },
+    "Ярослав Кендзьор": {
+      "local": "portraits/yaroslav-kendzior.jpg"
+    },
+    "Ірина Сеник": {
+      "local": "portraits/iryna-senyk.jpg"
+    },
+    "Ярослав Дашкевич": {
+      "local": "portraits/yaroslav-dashkevych.jpg"
     }
   }
 }
