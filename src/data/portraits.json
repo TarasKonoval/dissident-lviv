@@ -251,5 +251,16 @@
     "licenseUrl": null,
     "page": null,
     "src": "portraits/yaroslav-dashkevych.jpg"
+  },
+  "Валентин Мороз": {
+    "file": null,
+    "local": "portraits/valentyn-moroz.jpg",
+    "alt": "Валентин Мороз",
+    "note": null,
+    "author": null,
+    "license": null,
+    "licenseUrl": null,
+    "page": null,
+    "src": "portraits/valentyn-moroz.jpg"
   }
 }
