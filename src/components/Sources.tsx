@@ -49,10 +49,6 @@ export default function Sources({ stop, onOpen, onPerson, onAll }: Props) {
         (l, i, arr) => arr.findIndex((x) => x.url === l.url) === i,
       )
     : [];
-  const jsonUrl = useMemo(
-    () => URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })),
-    [],
-  );
   const photos = data.stops.filter((s) => s.photo?.src);
   const faces = data.people.filter((p) => portraitOf(p.name));
 
@@ -190,11 +186,6 @@ export default function Sources({ stop, onOpen, onPerson, onAll }: Props) {
         <p className="muted small">
           Світлини з Wikimedia Commons під вільними ліцензіями. Архівні фото Центру міської історії захищені авторським
           правом, тому на аркушах лише посилання на них. Мапа: © учасники OpenStreetMap, OpenMapTiles, OpenFreeMap.
-        </p>
-        <p>
-          <a className="linkbtn" href={jsonUrl} download="dysydentskyi-lviv.json">
-            Завантажити дані проєкту (JSON) ↓
-          </a>
         </p>
       </section>
     </section>

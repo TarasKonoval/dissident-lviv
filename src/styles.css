@@ -1084,44 +1084,47 @@ button {
   --c: var(--accent);
   --on: var(--on-fill);
   position: relative;
-  width: 1.85rem;
-  height: 1.85rem;
+  width: 1.7rem;
+  height: 1.7rem;
   padding: 0;
-  border-radius: 50%;
-  border: 2px solid var(--bg);
+  border-radius: 1px;
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, var(--c));
   background: var(--c);
   color: var(--on);
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
   cursor: pointer;
   display: grid;
   place-items: center;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent);
   transition: opacity 0.2s, transform 0.2s;
 }
 .pin--repression { --c: var(--repression); }
 .pin--resistance { --c: var(--resistance); }
 .pin--rally { --c: var(--rally); --on: var(--on-rally); }
 .pin--memory { --c: var(--memory); }
-.pin--approx::after {
+.pin--approx::after,
+.num--approx::after {
+  /* загнутий ріжок: місце приблизне */
   content: '';
   position: absolute;
-  inset: -0.5rem;
-  border-radius: 50%;
-  border: 1.5px dashed var(--c);
+  top: -1px;
+  right: -1px;
+  border-style: solid;
+  border-width: 0 0.5rem 0.5rem 0;
+  border-color: var(--bg) var(--bg) color-mix(in srgb, var(--ink) 30%, var(--c)) color-mix(in srgb, var(--ink) 30%, var(--c));
   pointer-events: none;
 }
 .pin--off {
   background: var(--bg);
   color: var(--c);
-  border: 2px dashed var(--c);
-  box-shadow: 0 0 0 2px var(--bg);
+  border: 1.5px solid var(--c);
 }
-.pin--off.pin--approx::after {
-  inset: -0.45rem;
-  border-width: 1px;
-  opacity: 0.6;
+.pin--off.pin--approx::after,
+.num--off.num--approx::after {
+  border-color: var(--bg) var(--bg) var(--c) var(--c);
 }
 .pin__label {
   position: absolute;
@@ -1139,19 +1142,17 @@ button {
   pointer-events: none;
   transition: opacity 0.15s;
 }
-.pin--approx .pin__label {
-  left: calc(100% + 0.9rem);
-}
 .pin:hover .pin__label,
 .pin:focus-visible .pin__label,
 .pin.is-active .pin__label {
   opacity: 1;
 }
 .pin.is-active {
-  width: 2.3rem;
-  height: 2.3rem;
-  font-size: 0.92rem;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 0.88rem;
+  outline: 1.5px solid var(--ink);
+  outline-offset: 2px;
 }
 .pin--mini.is-active {
   width: 1.55rem;
@@ -1168,10 +1169,11 @@ button {
   opacity: 0.75 !important;
 }
 .pin.is-match {
-  width: 2.3rem;
-  height: 2.3rem;
-  font-size: 0.92rem;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--c), 0 0 22px 4px color-mix(in srgb, var(--c) 55%, transparent);
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 0.88rem;
+  outline: 1.5px solid var(--c);
+  outline-offset: 2px;
   z-index: 2;
 }
 .pin.is-match .pin__label {
@@ -1551,31 +1553,27 @@ button {
   position: relative;
   display: inline-grid;
   place-items: center;
-  width: 1.7rem;
-  height: 1.7rem;
-  border-radius: 50%;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 1px;
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, var(--c));
   background: var(--c);
   color: var(--on);
   font-family: var(--sans);
   font-size: 0.72rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
   flex-shrink: 0;
 }
 .num--repression { --c: var(--repression); }
 .num--resistance { --c: var(--resistance); }
 .num--rally { --c: var(--rally); --on: var(--on-rally); }
 .num--memory { --c: var(--memory); }
-.num--approx::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px dashed var(--c);
-}
 .num--off {
   background: transparent;
   color: var(--c);
-  border: 1.5px dashed var(--c);
+  border: 1.5px solid var(--c);
 }
 
 .glossary {

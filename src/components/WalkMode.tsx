@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
-  DETOUR,
   MIN_PER_STOP,
   OFF_ROUTE,
   ROUTE,
-  SPEED_KMH,
   formatDistance,
   formatMinutes,
   googleWalkUrl,
@@ -75,10 +73,6 @@ export default function WalkMode({ onOpen }: Props) {
             <dd>≈ {formatMinutes(grandMinutes)}</dd>
           </div>
         </dl>
-        <p className="muted small">
-          {ROUTE.length} зупинок по {MIN_PER_STOP} хв. Відстані: пряма × {String(DETOUR).replace('.', ',')}, швидкість{' '}
-          {String(SPEED_KMH).replace('.', ',')} км/год. Це оцінка, не навігація.
-        </p>
         <p>
           <a className="btn" href={fullRoute} target="_blank" rel="noreferrer">
             Відкрити маршрут у Google Картах ↗
