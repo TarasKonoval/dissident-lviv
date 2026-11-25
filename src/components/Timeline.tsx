@@ -7,14 +7,15 @@ interface Props {
   onSelect: (id: number) => void;
 }
 
-/* Вісь: 1952–1964 стиснуто у вузький «вступ», далі 1965–1992 пропорційно. */
-const PRE: [number, number] = [1952, 1965];
-const MAIN: [number, number] = [1965, 1992];
-const PRE_W = 7; // % ширини під «до 1965»
-const GAP: [number, number] = [1978, 1987.4];
+/* Вісь: 1945–1958 стиснуто у вузький «вступ», далі 1959–1992 пропорційно. */
+const PRE: [number, number] = [1945, 1959];
+const MAIN: [number, number] = [1959, 1992];
+const PRE_W = 6; // % ширини під «до 1959»
+const GAP: [number, number] = [1982, 1986];
 const NEAR = 0.12; // років: ближчі події зсуваються вбік, як штрихи
 const PEAK_MIN = 3; // скільки подій за місяць робить «пік» із підписом
-const YEARS = [1953, 1965, 1970, 1975, 1980, 1985, 1990];
+const PEAK_GAP = 4; // % ширини: ближчі піки отримують спільний підпис
+const YEARS = [1946, 1960, 1965, 1970, 1975, 1980, 1985, 1990];
 
 const NOMINATIVE: Record<string, string> = {
   січня: 'січень', лютого: 'лютий', березня: 'березень', квітня: 'квітень', травня: 'травень', червня: 'червень',
@@ -51,9 +52,21 @@ export default function Timeline({ selectedId, filter = null, onSelect }: Props)
       const key = monthKey(e.date, e.year);
       if (key) groups.set(key, [...(groups.get(key) ?? []), e.left]);
     }
-    const peaks = [...groups.entries()]
+    const raw = [...groups.entries()]
       .filter(([, xs]) => xs.length >= PEAK_MIN)
-      .map(([label, xs]) => ({ label, left: xs.reduce((a, b) => a + b, 0) / xs.length }));
+      .map(([label, xs]) => ({ label, left: xs.reduce((a, b) => a + b, 0) / xs.length }))
+      .sort((a, b) => a.left - b.left);
+    // Сусідні місяці зливаємо в один підпис: «серпень–вересень 1965»
+    const peaks: { label: string; left: number }[] = [];
+    for (const p of raw) {
+      const prev = peaks[peaks.length - 1];
+      if (prev && p.left - prev.left < PEAK_GAP) {
+        const [m1, y1] = prev.label.split(' ');
+        const [m2, y2] = p.label.split(' ');
+        prev.label = y1 === y2 ? `${m1}–${m2} ${y2}` : `${prev.label} – ${p.label}`;
+        prev.left = (prev.left + p.left) / 2;
+      } else peaks.push({ ...p });
+    }
     return { events, peaks };
   }, []);
 

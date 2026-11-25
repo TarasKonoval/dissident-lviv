@@ -1,6 +1,8 @@
 import Face from './Face';
+import { useRef } from 'react';
 import Prose from './Prose';
-import { creditName, data, getStop, initials, pad2, personSlug, portraitOf } from '../data';
+import ReadingProgress from './ReadingProgress';
+import { creditName, data, getStop, initials, pad2, personSlug, portraitOf, readingTime } from '../data';
 import type { Person } from '../types';
 
 function StopBadges({ person, onOpen }: { person: Person; onOpen: (id: number) => void }) {
@@ -77,8 +79,11 @@ interface PageProps {
 export function PersonPage({ person, onOpen, onClose }: PageProps) {
   const i = data.people.indexOf(person);
   const portrait = portraitOf(person.name);
+  const article = useRef<HTMLElement>(null);
+  const time = readingTime([person.summary, ...person.bio]);
   return (
-    <article className="personpage" aria-labelledby="person-title">
+    <article ref={article} className="personpage" aria-labelledby="person-title">
+      <ReadingProgress target={article} />
       <header className={`personpage__hero${portrait ? '' : ' personpage__hero--text'}`}>
         {portrait ? <Face name={person.name} size="lg" /> : <Monogram name={person.name} size="lg" />}
         <div className="personpage__head">
@@ -87,6 +92,7 @@ export function PersonPage({ person, onOpen, onClose }: PageProps) {
               Довідка {pad2(i + 1)} з {pad2(data.people.length)}
             </span>
             <span>{person.years ?? 'роки життя невідомі'}</span>
+            <span>{time}</span>
           </p>
           <h2 id="person-title" className="personpage__name" tabIndex={-1}>
             {person.name}
@@ -129,7 +135,9 @@ export function PersonPage({ person, onOpen, onClose }: PageProps) {
         <aside className="sheet__rail personpage__rail" aria-label="Коротко">
           <div className="idcard">
             <p className="idcard__name">{person.name}</p>
-            <p className="idcard__years">{person.years ?? 'роки життя невідомі'}</p>
+            <p className="idcard__years">
+              {person.years ?? 'роки життя невідомі'} · {time}
+            </p>
             <p className="idcard__role">{person.role}</p>
             <h3 className="label">На мапі</h3>
             <StopBadges person={person} onOpen={onOpen} />

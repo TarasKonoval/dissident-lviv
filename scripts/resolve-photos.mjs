@@ -29,7 +29,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const DATA = path.join(HERE, '..', 'src', 'data', 'lviv.v3.json');
+const DATA = path.join(HERE, '..', 'src', 'data', 'lviv.v4.json');
 const CHOICE = path.join(HERE, 'photos.choice.json');
 const PORTRAITS = path.join(HERE, '..', 'src', 'data', 'portraits.json');
 const API = 'https://commons.wikimedia.org/w/api.php';
@@ -205,7 +205,7 @@ for (const stop of json.stops) {
 
 if (changed) {
   await writeFile(DATA, JSON.stringify(json, null, 2) + '\n');
-  console.log('\nЗаписано в src/data/lviv.v3.json');
+  console.log('\nЗаписано в src/data/lviv.v4.json');
 }
 
 /* ---------- Портрети ---------- */

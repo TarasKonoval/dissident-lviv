@@ -96,7 +96,12 @@ export default function App() {
   useEffect(() => {
     const behavior: ScrollBehavior = reducedMotion ? 'auto' : 'smooth';
     if (view.kind === 'about' && view.anchor) {
-      requestAnimationFrame(() => document.getElementById(view.anchor!)?.scrollIntoView({ behavior, block: 'start' }));
+      const to = (b: ScrollBehavior) => document.getElementById(view.anchor!)?.scrollIntoView({ behavior: b, block: 'start' });
+      if (firstRender.current) {
+        // при відкритті за посиланням довгий вступ ще досипає шрифти й фото: стрибаємо одразу і ще раз після розкладки
+        requestAnimationFrame(() => to('auto'));
+        setTimeout(() => to('auto'), 600);
+      } else requestAnimationFrame(() => to(behavior));
       firstRender.current = false;
       return;
     }

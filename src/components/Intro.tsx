@@ -1,5 +1,6 @@
-import Prose from './Prose';
-import { OFF_ROUTE, ROUTE, creditName, data, getStop } from '../data';
+import { useState } from 'react';
+import Prose, { ROMAN } from './Prose';
+import { GLOSSARY, OFF_ROUTE, ROUTE, creditName, data, getStop, readingTime } from '../data';
 import type { Stop } from '../types';
 
 interface Props {
@@ -7,7 +8,6 @@ interface Props {
   onWalk: () => void;
 }
 
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const COUNT = ['', 'Одна хвиля', 'Дві хвилі', 'Три хвилі', 'Чотири хвилі', "П'ять хвиль", 'Шість хвиль', 'Сім хвиль'];
 
 /** Розділи довгого читання: id секції → підпис у рядку змісту */
@@ -36,12 +36,30 @@ function Toc({ stops, onOpen }: { stops: Stop[]; onOpen: (id: number) => void })
   );
 }
 
+/** Розділювачі довгого вступу: частини по 4–6 абзаців, рівномірно. Повертає індекси початку частин II, III … */
+function sectionStarts(n: number, per = 5): number[] {
+  const parts = Math.ceil(n / per);
+  const base = Math.floor(n / parts);
+  const extra = n % parts;
+  const starts: number[] = [];
+  let at = 0;
+  for (let k = 0; k < parts - 1; k++) {
+    at += base + (k < extra ? 1 : 0);
+    starts.push(at);
+  }
+  return starts;
+}
+
 /** Обкладинка вступу: тюрма на Лонцького, через яку пройшли майже всі герої. */
 const cover = getStop(3)?.photo;
 
 export default function Intro({ onOpen, onWalk }: Props) {
   const { context } = data;
   // без зміни хешу: інакше роутер поверне вступ на початок
+  const [q, setQ] = useState('');
+  const needle = q.trim().toLowerCase();
+  const terms = needle ? GLOSSARY.filter((g) => `${g.term} ${g.text}`.toLowerCase().includes(needle)) : GLOSSARY;
+  const time = readingTime([...context.intro, ...context.waves.map((w) => w.text), ...context.system, context.ethics, context.critical]);
   const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
@@ -80,10 +98,11 @@ export default function Intro({ onOpen, onWalk }: Props) {
             {label}
           </button>
         ))}
+        <span className="parts__time">{time}</span>
       </nav>
 
       <section id="ctx-intro" aria-label="Передісторія" className="intro__read">
-        <Prose paragraphs={context.intro} className="story story--intro" glossary />
+        <Prose paragraphs={context.intro} className="story story--intro" glossary dividers={sectionStarts(context.intro.length)} />
         <p className="intro__start">
           <button type="button" className="btn" onClick={() => onOpen(ROUTE[0].id)}>
             Почати з аркуша 01 →
@@ -150,8 +169,25 @@ export default function Intro({ onOpen, onWalk }: Props) {
         <h2 id="glossary-title" className="section-title display">
           Словник
         </h2>
+        <div className="glossary__search">
+          <label htmlFor="glossary-q" className="label">
+            Пошук у словнику
+          </label>
+          <input
+            id="glossary-q"
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Наприклад, заслання"
+            autoComplete="off"
+          />
+          <span className="glossary__count" aria-live="polite">
+            {terms.length} з {GLOSSARY.length}
+          </span>
+        </div>
+        {terms.length === 0 && <p className="muted">Нічого не знайдено. Спробуйте інше слово.</p>}
         <dl className="glossary__list">
-          {data.glossary.map((g) => (
+          {terms.map((g) => (
             <div key={g.term} className="glossary__item">
               <dt>{g.term}</dt>
               <dd>{g.text}</dd>

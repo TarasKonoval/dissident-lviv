@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Face from './Face';
 import MiniMap from './MiniMap';
 import Prose from './Prose';
+import JumpList from './JumpList';
+import ReadingProgress from './ReadingProgress';
 import {
   ROUTE,
   ROUTE_TOTAL,
@@ -36,18 +38,27 @@ export default function StopSheet({ stop, onGo, onPerson, theme }: Props) {
   const prev = idx > 0 ? getStop(SEQUENCE[idx - 1]) : undefined;
   const next = idx < SEQUENCE.length - 1 ? getStop(SEQUENCE[idx + 1]) : undefined;
   const photo = stop.photo?.src ? stop.photo : null;
+  const article = useRef<HTMLElement>(null);
   const ri = ROUTE.findIndex((r) => r.id === stop.id);
   const nextOnFoot = ri >= 0 && ri < ROUTE.length - 1 ? { s: ROUTE[ri + 1], ...leg(ROUTE[ri + 1].fromPrev) } : null;
 
   return (
-    <article className={`sheet sheet--${stop.type}${stop.route ? '' : ' sheet--off'}`} aria-labelledby="sheet-title" key={stop.id}>
+    <article
+      ref={article}
+      className={`sheet sheet--${stop.type}${stop.route ? '' : ' sheet--off'}`}
+      aria-labelledby="sheet-title"
+      key={stop.id}
+    >
+      <ReadingProgress target={article} />
       <Hero stop={stop} photo={photo} />
 
       <div className="sheet__grid">
         <div className="sheet__main">
           <p className="sheet__lead">{stop.lead}</p>
 
-          <Prose paragraphs={stop.story} glossary />
+          {stop.story.length > 8 && <JumpList key={stop.id} paragraphs={stop.story} ids={`p${stop.id}`} />}
+
+          <Prose paragraphs={stop.story} glossary ids={`p${stop.id}`} />
 
           {stop.quote && (
             <figure className="pullquote">

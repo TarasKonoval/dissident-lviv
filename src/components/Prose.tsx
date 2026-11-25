@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { glossaryMatchers } from '../data';
+import { NOTE, glossaryMatchers } from '../data';
 import type { GlossaryTerm } from '../types';
 
 interface Props {
@@ -7,7 +7,13 @@ interface Props {
   /** Позначати перше входження термінів словника */
   glossary?: boolean;
   className?: string;
+  /** Префікс id абзаців (для змісту): `${ids}-${i}` */
+  ids?: string;
+  /** Індекси абзаців, перед якими стоїть нумерований розділювач */
+  dividers?: number[];
 }
+
+export const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
 const RUN_IN = /^(\d{4}(?:[–-]\d{4})?)\.\s+/;
 
@@ -22,8 +28,11 @@ function Term({ term, children }: { term: GlossaryTerm; children: ReactNode }) {
   );
 }
 
-/** Абзаци історії: рік на початку стає «врізкою», перше входження термінів словника отримує підказку. */
-export default function Prose({ paragraphs, glossary = false, className = 'story' }: Props) {
+/**
+ * Абзаци історії: рік на початку стає «врізкою», перше входження термінів словника отримує підказку.
+ * Останній абзац «Сьогодні. …» / «Що почитати. …» стає окремою приміткою з підписом.
+ */
+export default function Prose({ paragraphs, glossary = false, className = 'story', ids, dividers = [] }: Props) {
   const used = new Set<string>();
 
   function annotate(text: string): ReactNode[] {
@@ -56,13 +65,30 @@ export default function Prose({ paragraphs, glossary = false, className = 'story
   return (
     <div className={className}>
       {paragraphs.map((p, i) => {
+        const id = ids ? `${ids}-${i}` : undefined;
+        const d = dividers.indexOf(i);
+        const divider = d >= 0 && (
+          <div key={`d${i}`} className="divider" aria-hidden="true">
+            <span>{ROMAN[d + 1] ?? d + 2}</span>
+          </div>
+        );
+        const note = i === paragraphs.length - 1 && i > 0 ? NOTE.exec(p) : null;
+        if (note) {
+          return (
+            <aside key={i} id={id} className="note" aria-label={note[1]}>
+              <p className="note__label">{note[1]}</p>
+              <p>{annotate(p.slice(note[0].length))}</p>
+            </aside>
+          );
+        }
         const m = RUN_IN.exec(p);
-        return (
-          <p key={i}>
+        return [
+          divider,
+          <p key={i} id={id}>
             {m && <span className="runin">{m[1]}</span>}
             {annotate(m ? p.slice(m[0].length) : p)}
-          </p>
-        );
+          </p>,
+        ];
       })}
     </div>
   );
